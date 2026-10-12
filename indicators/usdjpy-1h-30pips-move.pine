@@ -1,0 +1,23 @@
+//@version=5
+indicator("USDJPY 1h 30pips変動検知", overlay=true)
+
+pips     = input.float(30, "閾値(pips)")
+lookback = input.int(60, "期間(本数・1分足で60=1時間)")
+pipSize  = 0.01
+
+// 直近1時間の安値からの上昇幅 / 高値からの下落幅(pips)
+up   = (close - ta.lowest(low, lookback)) / pipSize
+down = (ta.highest(high, lookback) - close) / pipSize
+
+upHit    = up >= pips
+downHit  = down >= pips
+upFire   = upHit and not upHit[1]       // 超えた瞬間だけ
+downFire = downHit and not downHit[1]
+
+plotshape(upFire,   style=shape.triangleup,   location=location.belowbar, color=color.green)
+plotshape(downFire, style=shape.triangledown, location=location.abovebar, color=color.red)
+
+if upFire
+    alert("USDJPY 上昇 " + str.tostring(up, "#.0") + "pips(直近1時間) 現在値 " + str.tostring(close, "#.000"), alert.freq_once_per_bar)
+if downFire
+    alert("USDJPY 下落 " + str.tostring(down, "#.0") + "pips(直近1時間) 現在値 " + str.tostring(close, "#.000"), alert.freq_once_per_bar)
