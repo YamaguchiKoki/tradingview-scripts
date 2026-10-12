@@ -14,8 +14,9 @@ downHit  = down >= pips
 upFire   = upHit and not upHit[1]       // 超えた瞬間だけ
 downFire = downHit and not downHit[1]
 
-plotshape(upFire,   style=shape.triangleup,   location=location.belowbar, color=color.green)
-plotshape(downFire, style=shape.triangledown, location=location.abovebar, color=color.red)
+plotshape(upFire,   style=shape.labelup,   location=location.belowbar, color=color.green, size=size.normal, text="▲30", textcolor=color.white)
+plotshape(downFire, style=shape.labeldown, location=location.abovebar, color=color.red,   size=size.normal, text="▼30", textcolor=color.white)
+bgcolor(upFire ? color.new(color.green, 70) : downFire ? color.new(color.red, 70) : na)
 
 if upFire
     alert("USDJPY 上昇 " + str.tostring(up, "#.0") + "pips(直近1時間) 現在値 " + str.tostring(close, "#.000"), alert.freq_once_per_bar)
